@@ -9,7 +9,7 @@ const SocketContext = createContext();
 const getSocket = ()=> useContext(SocketContext)
 
 const SocketProvider = ({children})=> {
-    const socket =useMemo(()=>io("http://localhost:3000" , {withCredentials : true }) ,[]) 
+    const socket =useMemo(()=>io("https://chatwave-server-2.onrender.com" , {withCredentials : true }) ,[]) 
         return (
             <SocketContext.Provider value={socket}>
                 {children}

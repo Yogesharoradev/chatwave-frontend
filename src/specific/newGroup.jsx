@@ -32,7 +32,6 @@ const NewGroup = () => {
       
       const selectedFriends = data?.friends.filter(friend => selectMembers.includes(friend._id));
       
-      // Creating group
       NewGroupdata({ name: values.GroupName, members: selectedFriends })
         .then(() => {
           message.success("Group created successfully!");

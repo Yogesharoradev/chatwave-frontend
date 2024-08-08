@@ -85,19 +85,7 @@ const api = createApi({
                                 credentials : "include",
                                 method : "POST",
                                 body : data ,
-                            }),
-                            transformResponse: (response) => {
-                                if (typeof response === 'string') {
-                                    try {
-                                        return JSON.parse(response);
-                                    } catch (error) {
-                                        return { error: response };
-                                    }
-                                }
-                                return response;
-                            },
-
-                        
+                            })         
                     }
                 ),
              myGroups : builder.query({

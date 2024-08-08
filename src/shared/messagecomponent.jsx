@@ -29,6 +29,7 @@ const Messagecomponent = ({message , user }) => {
         marginBottom: '0.5rem',
         textAlign: sameSender ? 'right' : 'left',
         }}>
+           
                 {
                    !sameSender && <Typography className="font-semibold text-blue-600">{sender.name}</Typography>
                 }

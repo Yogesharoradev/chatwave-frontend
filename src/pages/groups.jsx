@@ -1,5 +1,5 @@
+import React, { useEffect, useState } from 'react';
 import { Avatar, Button, Drawer, FloatButton, Form, Input, Modal, Skeleton, Tooltip, Typography, message } from 'antd';
-import React, { memo, useEffect, useState } from 'react';
 import { CiMenuBurger } from 'react-icons/ci';
 import { FaMinusCircle, FaPlusCircle } from 'react-icons/fa';
 import { MdBackspace, MdDoneOutline, MdModeEdit } from 'react-icons/md';
@@ -10,7 +10,7 @@ const Groups = () => {
   const navigate = useNavigate();
   const chatId = useSearchParams()[0].get("group");
 
-  const { data: myGroupsData } = useMyGroupsQuery("");
+  const { data: myGroupsData, refetch: refetchMyGroups } = useMyGroupsQuery("");
   const { data: groupDetailsData, refetch: refetchGroupDetails } = useChatDetailsQuery({ chatId, populate: true }, { skip: !chatId });
   const { data: friendsData, isLoading: isFriendsLoading } = useMyFriendsQuery(chatId);
   
@@ -29,31 +29,25 @@ const Groups = () => {
   const [members, setMembers] = useState([]);
   const [selectMembers, setSelectMembers] = useState([]);
 
-  
   useEffect(() => {
     if (groupDetailsData) {
-      console.log(groupDetailsData)
       setGroupNameUpdated(groupDetailsData.chat?.name);
       setGroupName(groupDetailsData.chat?.name);
       setMembers(groupDetailsData.chat?.members);
+      refetchMyGroups()
     }
-    return () => {
-      setGroupName("");
-      setGroupNameUpdated("");
-      setMembers([]);
-      setIsEdit(false);
-    };
   }, [groupDetailsData]);
 
+  const onChangeInput = (e) => {
+    setGroupNameUpdated(e.target.value);
+  };
 
-  const onChangeInput =(e)=>{
-     setGroupNameUpdated(e.target.value)
-  }
   const handleGroupNameUpdate = async () => {
     try {
       setIsEdit(false);
       await updateGroup({ name: groupNameUpdated, chatId }).unwrap();
-      refetchGroupDetails();
+      await refetchGroupDetails();
+      await refetchMyGroups(); 
       message.success("Updated group name successfully");
     } catch (err) {
       message.error("Cannot change group name, error");
@@ -64,8 +58,7 @@ const Groups = () => {
     const selectedFriends = friendsData.friends.filter(friend => selectMembers.includes(friend._id));
     try {
       await addMember({ chatId, members: selectedFriends }).unwrap();
-      refetchGroupDetails();
-      console.log(refetchGroupDetails)
+      await refetchGroupDetails();
       message.success("Members added successfully");
       setIsAddMemberModalOpen(false);
     } catch (error) {
@@ -76,7 +69,7 @@ const Groups = () => {
   const removeMemberHandler = async (userId) => {
     try {
       await removeMember({ chatId, userId }).unwrap();
-      refetchGroupDetails();
+      await refetchGroupDetails();
       message.success("Member removed successfully");
     } catch (err) {
       message.error(err?.data?.message);
@@ -87,6 +80,7 @@ const Groups = () => {
     try {
       await deleteGroup({ chatId }).unwrap();
       setIsDeleteModalOpen(false);
+      await refetchMyGroups(); // Refetch groups list
       message.success("Group deleted");
       navigate("/groups");
     } catch (err) {
@@ -98,11 +92,11 @@ const Groups = () => {
     <div className='h-full w-full'>
       {isEdit ? (
         <div className="flex flex-col md:flex-row justify-center items-center gap-5 w-full mt-4">
-          
           <input 
             value={groupNameUpdated} 
             type='text'
             size="large" 
+            autoFocus
             onChange={onChangeInput} 
             className="rounded-xxl px-4 py-2 border w-full md:w-auto"
             placeholder="Enter group name"
@@ -114,7 +108,7 @@ const Groups = () => {
           />
         </div>
       ) : (
-        <div className='text-center flex justify-center items-center gap-5'>
+        <div className='text-center flex flex-col justify-center items-center gap-5'>
           <h1 className='text-3xl font-semibold border border-b-4 px-6 py-2'>{groupName}</h1>
           <Tooltip title="Edit group name">
             <button className="mt-2" onClick={() => setIsEdit(true)}>
@@ -250,7 +244,7 @@ const GroupList = ({ GroupsList = [], chatId }) => (
   </div>
 );
 
-const GroupListItem = memo(({ group, chatId }) => {
+const GroupListItem = React.memo(({ group, chatId }) => {
   const { name, avatar, _id } = group;
   return (
     <Link to={`?group=${_id}`} onClick={e => chatId === _id && e.preventDefault()}>

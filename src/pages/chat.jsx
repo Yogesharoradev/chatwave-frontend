@@ -143,35 +143,52 @@ const Chat = ({ chatId, user }) => {
     }, 2000);
   };
 
-  console.log(allMessages)
   const fileChangeHandler = async (e, key) => {
     const files = Array.from(e.target.files);
     if (files.length <= 0) return;
     if (files.length > 5) return message.error(`Cannot send more than 5 ${key}`);
+  
     dispatch(setIsUploadingLoader(true));
-    const messageID = message.loading(`Sending ${key}.....`);
 
+    const messageID = message.loading(`Sending ${key}...`, 0);
+  
     try {
       const myForm = new FormData();
-
+  
       myForm.append("chatId", chatId);
-
+  
       files.forEach((file) => myForm.append("files", file));
-
+  
       const res = await sendAttachments(myForm);
-
+  
       if (res.data) {
-        message.success(`${key} successfully sent`, { id: messageID });
+       
+        message.success({
+          content: `${key} successfully sent`,
+          key: messageID, 
+          duration: 2,     
+        });
       } else {
-        message.error(`${key} not sent. Error`, { id: messageID });
+      
+        message.error({
+          content: `${key} not sent. Error`,
+          key: messageID,  
+          duration: 2,     
+        });
       }
     } catch (err) {
-      message.error(err.message, { id: messageID });
+     
+      message.error({
+        content: err.message,
+        key: messageID, 
+        duration: 2,   
+      });
     } finally {
       dispatch(setIsUploadingLoader(false));
       setPopoverVisible(false);
     }
   };
+  
 
   const content = (
     <div className='flex flex-col gap-4'>

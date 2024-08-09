@@ -161,9 +161,9 @@ const Chat = ({ chatId, user }) => {
       const res = await sendAttachments(myForm);
 
       if (res.data) {
-        message.success(`${key} successfully sent`, { id: messageID ,duration : 2 } ,3);
+        message.success(`${key} successfully sent`, { id: messageID });
       } else {
-        message.error(`${key} not sent. Error`, { id: messageID , duration : 2 } ,3);
+        message.error(`${key} not sent. Error`, { id: messageID });
       }
     } catch (err) {
       message.error(err.message, { id: messageID });

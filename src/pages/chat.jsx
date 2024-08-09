@@ -149,8 +149,6 @@ const Chat = ({ chatId, user }) => {
     if (files.length > 5) return message.error(`Cannot send more than 5 ${key}`);
   
     dispatch(setIsUploadingLoader(true));
-
-    const messageID = message.loading(`Sending ${key}...`, 0);
   
     try {
       const myForm = new FormData();
@@ -165,14 +163,12 @@ const Chat = ({ chatId, user }) => {
        
         message.success({
           content: `${key} successfully sent`,
-          key: messageID, 
           duration: 2,     
         });
       } else {
       
         message.error({
           content: `${key} not sent. Error`,
-          key: messageID,  
           duration: 2,     
         });
       }
@@ -180,7 +176,6 @@ const Chat = ({ chatId, user }) => {
      
       message.error({
         content: err.message,
-        key: messageID, 
         duration: 2,   
       });
     } finally {

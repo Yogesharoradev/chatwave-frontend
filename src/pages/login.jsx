@@ -36,7 +36,8 @@ const Login = () => {
       message.success(data.message);
       loginForm.resetFields();
     } catch (err) {
-      const errorMessage = err.response?.data || err || "Something went wrong";
+      const errorMessage = err?.response?.data || err || "Something went wrong";
+      console.log(errorMessage)
       message.error(errorMessage);
     } finally {
       setIsloading(false);

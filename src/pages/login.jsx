@@ -186,13 +186,13 @@ const Login = () => {
                   <Input.Password placeholder='Password' />
                 </Form.Item>
                 <Form.Item>
-                  <Button type="primary" htmlType="submit" className='w-full' size='large'>
+                  <Button type="primary" htmlType="submit" className='w-full' size='large' disabled={isLoading}>
                     Submit
                   </Button>
                 </Form.Item>
               </Form>
               <span className='font-semibold text-sm mb-3 text-white'>Already Have an Account</span>
-              <Button className='w-5/12 font-semibold' onClick={() => setIsLogin(true)} disabled={isLoading}>
+              <Button className='w-5/12 font-semibold' onClick={() => setIsLogin(true)} >
                 Log In
               </Button>
             </div>

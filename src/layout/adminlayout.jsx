@@ -14,7 +14,7 @@ const AdminLayout = ({ children }) => {
   const { data, error, isLoading } = useGetAdminQuery();
 
   useEffect(() => {
-    if (isLoading) return; // Don't do anything while loading
+    if (isLoading) return;
       if(data){
         dispatch(userExists(true))
       }else if(!data){

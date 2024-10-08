@@ -4,8 +4,8 @@ import React from 'react'
 export const LayoutLoaders = () => {
   return (
     <div className="flex justify-center items-center text-center min-h-screen bg-orange-600 p-4">
-      <h1 className="font-semibold text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-white">
-        ChatWave
+      <h1 className="font-semibold text-3xl sm:text-6xl md:text-5xl lg:text-8xl text-white">
+        Loading...
       </h1>
     </div>
   );
